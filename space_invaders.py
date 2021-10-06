@@ -1,22 +1,31 @@
-#Space Invaders - Part 1
-#Set up the screen
+# Space Invaders Tutorial by @TokyoEdTech
 
 import turtle
 import os
 import random
 import numpy as np
+import platform
 
-#Set up the screen
+random.seed(0)
+
+if platform.system() == 'Windows':
+	try:
+		import winsound
+	except:
+		print('ERROR: winsound module not available.')
+
+# Set up the screen
 wn = turtle.Screen()
 wn.bgcolor('black')
 wn.title('Space Invaders')
 wn.bgpic('images/space_background.gif')
+wn.tracer(0) #Shuts off the screen updates
 
-#Register the shape
-turtle.register_shape('images/space-invader-enemy.gif')
-turtle.register_shape('images/space-ship.gif')
+# Register the shape
+wn.register_shape('images/space-invader-enemy.gif')
+wn.register_shape('images/space-ship.gif')
 
-#Draw a border
+# Draw a border
 border_pen = turtle.Turtle()
 border_pen.speed(0) #fastest
 border_pen.color('white')
@@ -37,84 +46,88 @@ score_pen = turtle.Turtle()
 score_pen.speed(0)
 score_pen.color('white')
 score_pen.penup()
-score_pen.setposition(-290,280)
-scorestring = 'Score: %s' %score
-score_pen.write(scorestring, False, align='left', font=('Arial',14, 'normal'))
+score_pen.setposition(-290,270)
+scorestring = 'Score: {}'.format(score)
+score_pen.write(scorestring, False, align='left', font=('Arial',12, 'normal'))
 score_pen.hideturtle()
 
-#Create the player turtle
-player = turtle.Turtle()
-player.color('blue')
-player.shape('images/space-ship.gif')
-player.penup()
-player.speed(0)
-player.setposition(0,-250)
-player.setheading(90)
+#Create the player turtle class
+class Player(turtle.Turtle):
+	def __init__(self):
+		turtle.Turtle.__init__(self)
+		self.shape('images/space-ship.gif')
+		self.penup()
+		self.speed(0)
+		self.setposition(0,-250)
+		self.setheading(90)
+		self.speed = 0
 
-#Space Invaders - Part 2
-#Move the player
+	#Move the player left and right
+	def move_left(self):
+		player.speed = -0.25
+		
+	def move_right(self):
+		player.speed = 0.25
 
-playerspeed = 15
-
-#Move the player left and right
-def move_left():
-	x = player.xcor() #Old position
-	x -= playerspeed
-#the lowest value for x must be -280
-	if x < -280:
-		x = -280
-	player.setx(x) #New position
+		
+	def move_player(self):
+		x = player.xcor() #Old position
+		x += player.speed
+	#the lowest value for x must be -280
+		if x < -280:
+			x = -280	
+	#the highest value for x must be 280
+		if x > 280:
+			x = 280
+		player.setx(x) #New position
 	
-def move_right():
-	x = player.xcor() #Old position
-	x += playerspeed
-#the highest value for x must be 280
-	if x > 280:
-		x = 280
-	player.setx(x)
-	
-#Create keyboard bindings
-turtle.listen()
-turtle.onkey(move_left, 'Left') #When left arrow key is pressed, it 
-				#calls the function 'move_left'
-turtle.onkey(move_right, 'Right') #Same but for right arrow
+	def fire_bullet(self):
+		#define bulletstate as global if it needs changed
+		global bulletstate #any changes in the function are reflected outside the funcion
+		if bulletstate == 'ready':
+		#move the bullet to the just above the player
+			play_sound('sounds/laser.wav')
+			bulletstate='fire'
+			x = player.xcor()
+			y = player.ycor()
+			bullet.setposition(x,y+10)
+			bullet.showturtle()
 
-'''
-#Space Invaders - Part 3
-#Create the Enemy and move left / right / down
+class Enemy(turtle.Turtle):
+	def __init__(self,x,y):
+		turtle.Turtle.__init__(self)
+		self.shape('images/space-invader-enemy.gif')
+		self.penup()
+		self.speed(0)
+		self.speed = 0.02
+		self.goto(x,y)
+		
+player = Player()
 
-enemy = turtle.Turtle()
-enemy.color('red')
-enemy.shape('circle')
-enemy.penup()
-enemy.speed(0)
-enemy.setposition(-200,250)
-'''
+#define bullet state
+#ready: ready to fire
+#fire: bullet is firing
+bulletstate = 'ready'
 
-#Space Invaders - Part 6
-#Add enemies
 
 #Choose a number of enemies
-number_of_enemies = 5
+Nenemies = 30
 
-#Create an empty list
 enemies = []
 
-#Add enemies to the list
-for i in range(number_of_enemies):
-#Create an enemy
-	enemies.append(turtle.Turtle())
+enemy_ctr = 0
+enemy_xi = -225
+enemy_yi = 250
 	
-for enemy in enemies:
-
-	enemy.shape('images/space-invader-enemy.gif')
-	enemy.penup()
-	enemy.speed(0)
-	x = random.randint(-200,200)
-	y = random.randint(100,250)
-	enemy.setposition(x,y)
-
-enemyspeed = 2
+for i in range(Nenemies):
+	x = enemy_xi + (50*enemy_ctr)
+	y = enemy_yi
+	enemies.append(Enemy(x,y))
+	# Update the enemy number
+	enemy_ctr += 1
+	if enemy_ctr == 10:
+		enemy_yi -= 50
+		enemy_ctr = 0
 
 #Create the big enemy
 big_enemy = turtle.Turtle()
@@ -124,10 +137,7 @@ big_enemy.penup()
 big_enemy.speed(0)
 big_enemy.setposition(-275,250)
 big_enemy.hideturtle()
-big_enemy_speed = 10
-
-#Space Invaders - Part 4
-#Create the Player Bullet and Fire with the Space Bar
+big_enemy_speed = 1.25
 
 #create the player's bullet
 
@@ -140,30 +150,8 @@ bullet.setheading(90)
 bullet.shapesize(0.5,0.5)
 bullet.hideturtle() #bullet hidden at the beginning
 
-bulletspeed = 20
+bulletspeed = 0.5
 
-#define bullet state
-#ready: ready to fire
-#fire: bullet is firing
-
-bulletstate = 'ready'
-
-def fire_bullet():
-	#define bulletstate as global if it needs changed
-	global bulletstate #any changes in the function are reflected outside the funcion
-	if bulletstate == 'ready':
-	#move the bullet to the just above the player
-		os.system('aplay laser.wav&')
-		bulletstate='fire'
-		x = player.xcor()
-		y = player.ycor()
-		bullet.setposition(x,y+10)
-		bullet.showturtle()
-	
-turtle.onkey(fire_bullet, 'space')
-
-#Space Invaders - Part 5
-#Collisions
 
 def isCollision(t1, t2):
 	distance = np.sqrt((t1.xcor()-t2.xcor())**2+(t1.ycor()-t2.ycor())**2)
@@ -172,13 +160,40 @@ def isCollision(t1, t2):
 	else:
 		return False
 
+def play_sound(soundfile, time = 0):
+	# Windows
+	if platform.system() == 'Windows':
+		winsound.PlaySound(soundfile, winsound.SND_ASYNC)
+	# Linux
+	elif platform.system() == 'Linux':
+		os.system('aplay -q {}&'.format(soundfile))
+	# Mac
+	else:
+		os.system('afplay {}&'.format(soundfile))
+	
+	# Repeat sound
+	if time > 0:
+		turtle.ontimer(lambda: play_sound(soundfile, time), t=int(time*1000))
+
+#Create keyboard bindings
+wn.listen()
+wn.onkeypress(player.move_left, 'Left') #When left arrow key is pressed, it 
+				#calls the function 'move_left'
+wn.onkeypress(player.move_right, 'Right') #Same but for right arrow
+wn.onkeypress(player.fire_bullet, 'space')
+
+# Play background music
+#play_sound('sounds/bgm.mp3', 119)
+
 #Main game loop
 while True:
-	rand = random.randint(0,10)
+	wn.update()
+	rand = random.randint(0,100)
+	player.move_player()
 	for enemy in enemies:
 		#Move the enemy
 		x = enemy.xcor()
-		x += enemyspeed
+		x += enemy.speed
 		enemy.setx(x)
 
 		#Move all the enemies back and down
@@ -187,35 +202,33 @@ while True:
 				y = e.ycor()
 				y -= 40
 				e.sety(y)
-			enemyspeed *= -1 #Inverse the velocity
+				e.speed *= -1 #Inverse the velocity
 			
 		if enemy.xcor() < -280:
 			for e in enemies:
 				y = e.ycor()
 				y -= 40
 				e.sety(y)
-			enemyspeed *= -1 #Inverse the velocity
+				e.speed *= -1 #Inverse the velocity
 			
 		#Check for a collision between bullet and enemy
 		if isCollision(bullet, enemy):
-			os.system('aplay explosion.wav&')
+			play_sound('sounds/explosion.wav')
 			#Reset the bullet
 			bullet.hideturtle()
 			bulletstate = 'ready'
 			bullet.setposition(0,-400)
 			#Reset the enemy
-			x = random.randint(-200,200)
-			y = random.randint(100,250)
-			enemy.setposition(x,y)
+			enemy.setposition(0,10000)
 			#Update the score
 			score += 10
-			scorestring = 'Score: %s' %score
+			scorestring = 'Score: {}'.format(score)
 			score_pen.clear()
 			score_pen.write(scorestring, False, align='left', font=('Arial',14, 'normal'))
 		
 		#Collision between player and enemy (Gave Over)
 		if isCollision(enemy, player):
-			os.system('aplay explosion.wav&')
+			play_sound('sounds/explosion.wav')
 			player.hideturtle()
 			enemy.hideturtle()
 			print('Game Over!')
@@ -231,7 +244,7 @@ while True:
 			big_enemy.hideturtle()
 			big_enemy.setx(-275)
 		if isCollision(bullet, big_enemy):
-			os.system('aplay explosion.wav&')
+			play_sound('sounds/explosion.wav')
 			big_enemy.hideturtle()
 			big_enemy.setx(-275)
 			#Reset the bullet
@@ -240,7 +253,7 @@ while True:
 			bullet.setposition(0,-400)
 			#Update the score
 			score += 50
-			scorestring = 'Score: %s' %score
+			scorestring = 'Score: {}'.format(score)
 			score_pen.clear()
 			score_pen.write(scorestring, False, align='left', font=('Arial',14, 'normal'))
 		
@@ -256,5 +269,3 @@ while True:
 		bullet.sety(player.ycor()+10) #the bullet returns at the initial position
 		bulletstate = 'ready'
 	
-
-delay = input('Press enter to finish.')

@@ -1,4 +1,4 @@
-
+# Tutorial by @TokyoEdTech
 #A Simple Maze Game
 
 #Part 1: Setting Up The Maze
@@ -37,7 +37,29 @@ class Player(turtle.Turtle):
         self.penup()
         self.speed(0)
         self.gold = 0 # When the game starts, the player has 0 gold
+    '''
+    def move(self, where):
+        if where == 'up':
+            move_to_x = self.xcor()
+            move_to_y = self.ycor() + 24
 
+        elif where == 'down':
+            move_to_x = self.xcor()
+            move_to_y = self.ycor() - 24
+
+        elif where == 'left':
+            move_to_x = self.xcor() - 24
+            move_to_y = self.ycor()
+            self.shape('images/wizard_left.gif')
+
+        elif where == 'right':
+            move_to_x = self.xcor()
+            move_to_y = self.ycor() + 24
+            self.shape('images/wizard_right.gif')
+
+        if (move_to_x, move_to_y) not in walls:
+            self.goto(move_to_x, move_to_y)
+    '''
     def up(self):
         move_to_x = self.xcor()
         move_to_y = self.ycor() + 24
@@ -114,6 +136,18 @@ class Enemy(turtle.Turtle):
             dx = 0
             dy = 0
 
+        #Check if player is close
+        #If so, go in that direction
+        if self.is_close(player):
+            if player.xcor() < self.xcor():
+                self.direction = 'left'
+            elif player.xcor() > self.xcor():
+                self.direction = 'right'
+            elif player.ycor() < self.ycor():
+                self.direction = 'down'
+            elif player.ycor() > self.ycor():
+                self.direction = 'up'
+
         #Calculate te spot to move to
         move_to_x = self.xcor() + dx
         move_to_y = self.ycor() + dy
@@ -127,6 +161,16 @@ class Enemy(turtle.Turtle):
 
         #Set timer to move next time
         turtle.ontimer(self.move, t=rnd.randint(100,300))
+
+    def is_close(self, other):
+        a = self.xcor() - other.xcor()
+        b = self.ycor() - other.ycor()
+        d = np.sqrt((a**2) + (b**2))
+
+        if d < 75:
+            return True
+        else:
+            return False
         
 #Create levels list
 levels= ['']
