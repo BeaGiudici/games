@@ -33,7 +33,7 @@ class Sprite():
 		self.width = width
 		self.height = height
 		self.color = WHITE
-		self.friction = 0.9 # 1 = no friction, 0 = all friction
+		self.friction = 0.95 # 1 = no friction, 0 = all friction
 		
 	def goto(self, x, y):
 		self.x = x
