@@ -85,7 +85,8 @@ blocks.append(Sprite(200, 500, 100, 200))
 while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			sys.exit()
+			pygame.quit()
+			exit()
 			
 		# Keyboards events
 		if event.type == pygame.KEYDOWN:
