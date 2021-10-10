@@ -2,6 +2,7 @@
 
 import turtle
 import os
+import sys
 import random
 import numpy as np
 import platform
@@ -19,7 +20,7 @@ wn = turtle.Screen()
 wn.bgcolor('black')
 wn.title('Space Invaders')
 wn.bgpic('images/space_background.gif')
-wn.tracer(0) #Shuts off the screen updates
+wn.tracer(0) # Shuts off the screen updates
 
 # Register the shape
 wn.register_shape('images/space-invader-enemy.gif')
@@ -38,10 +39,10 @@ for side in range(4):
 	border_pen.lt(90)
 border_pen.hideturtle()
 
-#Set the score to 0
+# Set the score to 0
 score = 0
 
-#Draw the score
+# Draw the score
 score_pen = turtle.Turtle()
 score_pen.speed(0)
 score_pen.color('white')
@@ -104,13 +105,12 @@ class Enemy(turtle.Turtle):
 		
 player = Player()
 
-#define bullet state
-#ready: ready to fire
-#fire: bullet is firing
+# Define bullet state
+# ready: ready to fire
+# fire: bullet is firing
 bulletstate = 'ready'
 
-
-#Choose a number of enemies
+# Choose a number of enemies
 Nenemies = 30
 
 enemies = []
@@ -129,15 +129,15 @@ for i in range(Nenemies):
 		enemy_yi -= 50
 		enemy_ctr = 0
 
-#Create the big enemy
-big_enemy = turtle.Turtle()
-big_enemy.color('red')
+# Create the big enemy
+big_enemy = Enemy(-275,250)
+#big_enemy.shape('images/space-big-ship.png')
 big_enemy.shape('square')
+big_enemy.color('red')
 big_enemy.penup()
-big_enemy.speed(0)
-big_enemy.setposition(-275,250)
+#big_enemy.speed(0)
 big_enemy.hideturtle()
-big_enemy_speed = 1.25
+big_enemy.speed = 1.25
 
 #create the player's bullet
 
@@ -181,6 +181,7 @@ wn.onkeypress(player.move_left, 'Left') #When left arrow key is pressed, it
 				#calls the function 'move_left'
 wn.onkeypress(player.move_right, 'Right') #Same but for right arrow
 wn.onkeypress(player.fire_bullet, 'space')
+wn.onkeypress(wn.bye, 'Escape')
 
 # Play background music
 #play_sound('sounds/bgm.mp3', 119)
@@ -188,7 +189,7 @@ wn.onkeypress(player.fire_bullet, 'space')
 #Main game loop
 while True:
 	wn.update()
-	rand = random.randint(0,100)
+	rand = 2
 	player.move_player()
 	for enemy in enemies:
 		#Move the enemy
@@ -238,7 +239,7 @@ while True:
 	if rand == 5:
 		big_enemy.showturtle()
 		X = big_enemy.xcor()
-		X += big_enemy_speed
+		X += big_enemy.speed
 		big_enemy.setx(X)
 		if big_enemy.xcor() > 275:
 			big_enemy.hideturtle()
@@ -256,7 +257,7 @@ while True:
 			scorestring = 'Score: {}'.format(score)
 			score_pen.clear()
 			score_pen.write(scorestring, False, align='left', font=('Arial',14, 'normal'))
-		
+
 	#move the bullet
 	if bulletstate == 'fire':
 		y = bullet.ycor()
@@ -268,4 +269,5 @@ while True:
 		bullet.hideturtle()
 		bullet.sety(player.ycor()+10) #the bullet returns at the initial position
 		bulletstate = 'ready'
+
 	
