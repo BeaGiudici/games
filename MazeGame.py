@@ -277,26 +277,27 @@ for enemy in enemies:
 #wn.tracer(0)
 
 #Main Game Loop
-while True:
-    #Check for player collision with treasure
-    #Iterate through treasure list
-    for treasure in treasures:
-        if player.is_collision(treasure):
-            #Add the trasure gold to the player gold
-            player.gold += treasure.gold
-            gold_pen.clear()
-            gold_pen.write('Gold: %d' % player.gold,False,align='left', font=('Arial',14,'normal'))
-            #Destroy the treasure
-            treasure.destroy()
-            #Remove the treasure form the list
-            treasures.remove(treasure)
+if __name__ == '__main__':
+    while True:
+        #Check for player collision with treasure
+        #Iterate through treasure list
+        for treasure in treasures:
+            if player.is_collision(treasure):
+                #Add the trasure gold to the player gold
+                player.gold += treasure.gold
+                gold_pen.clear()
+                gold_pen.write('Gold: %d' % player.gold,False,align='left', font=('Arial',14,'normal'))
+                #Destroy the treasure
+                treasure.destroy()
+                #Remove the treasure form the list
+                treasures.remove(treasure)
 
-    #Iterate through enemy list to see if the player collides
-    for enemy in enemies:
-        if player.is_collision(enemy):
-            enemy_pen = turtle.Turtle()
-            enemy_pen.color('red')
-            enemy_pen.write('Game Over!',False,align='center', font=('Arial',40,'normal'))
+        #Iterate through enemy list to see if the player collides
+        for enemy in enemies:
+            if player.is_collision(enemy):
+                enemy_pen = turtle.Turtle()
+                enemy_pen.color('red')
+                enemy_pen.write('Game Over!',False,align='center', font=('Arial',40,'normal'))
 
-    #Update screen
-    wn.update()
+        #Update screen
+        wn.update()
