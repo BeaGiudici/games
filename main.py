@@ -52,9 +52,13 @@ b = Button(0,0, length=300, height=100, title='Game 1')
 turtle.listen()
 turtle.onscreenclick(b.btn_click, 1)
 
-
 while True:
 	if b.click == True:
-		turtle.resetscreen()
-		MazeGame
+		b.click=False
+		wn.reset()
+#		os.system('python3 MazeGame.py')
+#		turtle.showturtle()
+		MazeGame.create_screen()
+		MazeGame.initialise()
+		MazeGame.main_loop()
 	wn.update()

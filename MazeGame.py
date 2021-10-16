@@ -7,12 +7,6 @@ import turtle
 import numpy as np
 import random as rnd
 
-wn = turtle.Screen() #Create a screen
-wn.bgcolor('black')
-wn.title('Maze Game')
-wn.setup(700,700) #(pixels)
-wn.tracer(0)
-
 #Register shapes
 images = ['images/wizard_right.gif','images/wizard_left.gif', \
           'images/treasure.gif','images/wall.gif',\
@@ -171,38 +165,17 @@ class Enemy(turtle.Turtle):
             return True
         else:
             return False
-        
+
+wn = turtle.Screen() #Create a screen
+def create_screen():
+    wn.bgcolor('black')
+    wn.title('Maze Game')
+    wn.setup(700,700) #(pixels)
+    print('create_screen')
+    wn.tracer(0)
+
 #Create levels list
 levels= ['']
-
-#Define first level
-level_1 = [
-    'XXXXXXXXXXXXXXXXXXXXXXXXX',
-    'XP XXXXXXX         EXXXXX',
-    'X  XXXXXXX  XXXXXX  XXXXX',
-    'X       XX  XXXXXX  XXXXX',
-    'X       XX  XXX        XX',
-    'X                  E   XX',
-    'XXXXX   XX  XXX      XXXX',
-    'XXXXX   XX  XXX  T   XXXX',
-    'XXXXX   XX  XXXXXXXXXXXXX',
-    'XXXXX   XX       XXXXXXXX',
-    'XXXXX   XX       XXXXXXXX',
-    'XX      XXXXXXX  XXXXXXXX',
-    'XX      XXXXXXX  XXXXXXXX',
-    'XX  XXXXXXX      XXXXXXXX',
-    'XX  XXXXXXX      XXXXXXXX',
-    'XX  XXXXXXXXXXX  XXXXXXXX',
-    'XX  XXXXXXXXXXX  XXXXXXXX',
-    'XX      XXXX     XXXXXXXX',
-    'XX      XXXX     XXXXXXXX',
-    'XX      XXXX           XX',
-    'XX      XXXX           XX',
-    'XX  XXXXXXXX    E      XX',
-    'XX                  XXXXX',
-    'XX                     XX',
-    'XXXXXXXXXXXXXXXXXXXXXXXXX'
-] # This permits us to create a level just by changing some text
 
 #Add a treasure list
 treasures = []
@@ -210,74 +183,117 @@ treasures = []
 #Add enemies list
 enemies = []
 
-#Add maze to mazes list
-levels.append(level_1)
-
-#Create Level Setup Function
-def setup_maze(level):
-    for y in range(len(level)):
-        for x in range (len(level[y])):
-            #Get the character at each x,y coordinate
-            #NOTE the order of y and x in the next line
-            c = level[y][x]
-            #Calculate the screen x,y
-            screen_x = -288 + (x * 24)
-            screen_y = 288 - (y * 24)
-
-            #Check if it is an X (representing a wall)
-            if c == 'X':
-                pen.goto(screen_x,screen_y)
-                pen.shape('images/wall.gif')
-                pen.stamp()
-                #Add coordinates to wall list
-                walls.append((screen_x,screen_y))
-
-            #Check if it is a P (representing the player)
-            if c == 'P':
-                player.goto(screen_x,screen_y)
-
-            #Check if it is a R (representing a treasure)
-            if c == 'T':
-                treasures.append(Treasure(screen_x,screen_y))
-
-            if c == 'E':
-                enemies.append(Enemy(screen_x,screen_y))
-
 #Create class instances
 pen = Pen()
 player = Player()
-
-#Draw the gold on screen
 gold_pen = turtle.Turtle()
-gold_pen.speed(0)
-gold_pen.color('gold')
-gold_pen.penup()
-gold_pen.setposition(-288,298)
-gold_pen.write('Gold: %d' % player.gold, False, align='left',font=('Arial',14,'normal'))
-gold_pen.hideturtle()
-
 #Create wall coordinates list
 walls = []
 
-#Set up the level
-setup_maze(levels[1])
-#print(walls)
+def initialise():        
+    global levels
+    global treasures
+    global enemies
+    global pen
+    global player
+    global gold_pen
+    global walls
+    
+    #Define first level
+    level_1 = [
+        'XXXXXXXXXXXXXXXXXXXXXXXXX',
+        'XP XXXXXXX         EXXXXX',
+        'X  XXXXXXX  XXXXXX  XXXXX',
+        'X       XX  XXXXXX  XXXXX',
+        'X       XX  XXX        XX',
+        'X                  E   XX',
+        'XXXXX   XX  XXX      XXXX',
+        'XXXXX   XX  XXX  T   XXXX',
+        'XXXXX   XX  XXXXXXXXXXXXX',
+        'XXXXX   XX       XXXXXXXX',
+        'XXXXX   XX       XXXXXXXX',
+        'XX      XXXXXXX  XXXXXXXX',
+        'XX      XXXXXXX  XXXXXXXX',
+        'XX  XXXXXXX      XXXXXXXX',
+        'XX  XXXXXXX      XXXXXXXX',
+        'XX  XXXXXXXXXXX  XXXXXXXX',
+        'XX  XXXXXXXXXXX  XXXXXXXX',
+        'XX      XXXX     XXXXXXXX',
+        'XX      XXXX     XXXXXXXX',
+        'XX      XXXX           XX',
+        'XX      XXXX           XX',
+        'XX  XXXXXXXX    E      XX',
+        'XX                  XXXXX',
+        'XX                     XX',
+        'XXXXXXXXXXXXXXXXXXXXXXXXX'
+    ] # This permits us to create a level just by changing some text
 
-#Keyboard Binding
-turtle.listen()
-turtle.onkey(player.left,'Left')
-turtle.onkey(player.right,'Right')
-turtle.onkey(player.up,'Up')
-turtle.onkey(player.down,'Down')
+    #Add maze to mazes list
+    levels.append(level_1)
 
-#Start moving enemies
-for enemy in enemies:
-    turtle.ontimer(enemy.move, t=250)
+    #Create Level Setup Function
+    def setup_maze(level):
+        for y in range(len(level)):
+            for x in range (len(level[y])):
+                #Get the character at each x,y coordinate
+                #note the order of y and x in the next line
+                c = level[y][x]
+                #Calculate the screen x,y
+                screen_x = -288 + (x * 24)
+                screen_y = 288 - (y * 24)
 
+                #Check if it is an X (representing a wall)
+                if c == 'X':
+                    pen.goto(screen_x,screen_y)
+                    pen.shape('images/wall.gif')
+                    pen.stamp()
+                    #Add coordinates to wall list
+                    walls.append((screen_x,screen_y))
+
+                #Check if it is a P (representing the player)
+                if c == 'P':
+                    player.goto(screen_x,screen_y)
+
+                #Check if it is a R (representing a treasure)
+                if c == 'T':
+                    treasures.append(Treasure(screen_x,screen_y))
+
+                if c == 'E':
+                    enemies.append(Enemy(screen_x,screen_y))
+
+    #Draw the gold on screen
+    
+    gold_pen.speed(0)
+    gold_pen.color('gold')
+    gold_pen.penup()
+    gold_pen.setposition(-288,298)
+    gold_pen.write('Gold: %d' % player.gold, False, align='left',font=('Arial',14,'normal'))
+#    gold_pen.hideturtle()
+
+    #Set up the level
+    setup_maze(levels[1])
+    #print(walls)
+
+    #Keyboard Binding
+    turtle.listen()
+    turtle.onkey(player.left,'Left')
+    turtle.onkey(player.right,'Right')
+    turtle.onkey(player.up,'Up')
+    turtle.onkey(player.down,'Down')
+
+    #Start moving enemies
+    for enemy in enemies:
+        turtle.ontimer(enemy.move, t=250)
+    print('init')
 #wn.tracer(0)
 
 #Main Game Loop
-if __name__ == '__main__':
+def main_loop():
+    global player
+    global treasures
+    global enemies
+    global gold_pen
+    
     while True:
         #Check for player collision with treasure
         #Iterate through treasure list
