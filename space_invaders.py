@@ -19,12 +19,12 @@ if platform.system() == 'Windows':
 wn = turtle.Screen()
 wn.bgcolor('black')
 wn.title('Space Invaders')
-wn.bgpic('~/Codici/games/images/space_background.gif')
+wn.bgpic('images/space_background.gif')
 wn.tracer(0) # Shuts off the screen updates
 
 # Register the shape
-wn.register_shape('~/Codici/games/images/space-invader-enemy.gif')
-wn.register_shape('~/Codici/games/images/space-ship.gif')
+wn.register_shape('images/space-invader-enemy.gif')
+wn.register_shape('images/space-ship.gif')
 
 # Draw a border
 border_pen = turtle.Turtle()
@@ -56,7 +56,7 @@ score_pen.hideturtle()
 class Player(turtle.Turtle):
 	def __init__(self):
 		turtle.Turtle.__init__(self)
-		self.shape('~/Codici/games/images/space-ship.gif')
+		self.shape('images/space-ship.gif')
 		self.penup()
 		self.speed(0)
 		self.setposition(0,-250)
@@ -87,7 +87,7 @@ class Player(turtle.Turtle):
 		global bulletstate # any changes in the function are reflected outside the funcion
 		if bulletstate == 'ready':
 		# move the bullet to the just above the player
-			play_sound('~/Codici/games/sounds/laser.wav')
+			play_sound('sounds/laser.wav')
 			bulletstate='fire'
 			x = player.xcor()
 			y = player.ycor()
@@ -97,7 +97,7 @@ class Player(turtle.Turtle):
 class Enemy(turtle.Turtle):
 	def __init__(self,x,y):
 		turtle.Turtle.__init__(self)
-		self.shape('~/Codici/games/images/space-invader-enemy.gif')
+		self.shape('images/space-invader-enemy.gif')
 		self.penup()
 		self.speed(0)
 		self.speed = 0.02
@@ -184,7 +184,7 @@ wn.onkeypress(player.fire_bullet, 'space')
 wn.onkeypress(wn.bye, 'Escape')
 
 # Play background music
-# play_sound('~/Codici/games/sounds/bgm.mp3', 119)
+# play_sound('sounds/bgm.mp3', 119)
 
 # Main game loop
 while True:
@@ -214,7 +214,7 @@ while True:
 			
 		# Check for a collision between bullet and enemy
 		if isCollision(bullet, enemy):
-			play_sound('~/Codici/games/sounds/explosion.wav')
+			play_sound('sounds/explosion.wav')
 			# Reset the bullet
 			bullet.hideturtle()
 			bulletstate = 'ready'
@@ -229,7 +229,7 @@ while True:
 		
 		# Collision between player and enemy (Gave Over)
 		if isCollision(enemy, player):
-			play_sound('~Codici/games/sounds/explosion.wav')
+			play_sound('~Codici/retroGames/sounds/explosion.wav')
 			player.hideturtle()
 			enemy.hideturtle()
 			print('Game Over!')
@@ -245,7 +245,7 @@ while True:
 			big_enemy.hideturtle()
 			big_enemy.setx(-275)
 		if isCollision(bullet, big_enemy):
-			play_sound('~Codici/games/sounds/explosion.wav')
+			play_sound('~Codici/retroGames/sounds/explosion.wav')
 			big_enemy.hideturtle()
 			big_enemy.setx(-275)
 			# Reset the bullet
