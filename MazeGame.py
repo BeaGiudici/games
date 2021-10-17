@@ -1,36 +1,41 @@
 # Tutorial by @TokyoEdTech
-#A Simple Maze Game
+# A Simple Maze Game
 
-#Part 1: Setting Up The Maze
+# Part 1: Setting Up The Maze
 
 import turtle
 import numpy as np
 import random as rnd
 
-#Register shapes
-images = ['images/wizard_right.gif','images/wizard_left.gif', \
-          'images/treasure.gif','images/wall.gif',\
+# Register shapes
+images = ['images/wizard_right.gif', 'images/wizard_left.gif',
+          'images/treasure.gif', 'images/wall.gif',
           'images/enemy.gif']
 for image in images:
     turtle.register_shape(image)
 
-#Create Pen
-class Pen(turtle.Turtle): #defines a turtle object
+# Create Pen
+
+
+class Pen(turtle.Turtle):  # defines a turtle object
     def __init__(self):
         turtle.Turtle.__init__(self)
-        self.shape('square')
-        self.color('white')
+#        self.shape('square')
+#        self.color('white')
         self.penup()
-        self.speed(0) #fasest
+        self.hideturtle()
+        self.speed(0)  # fasest
+
 
 class Player(turtle.Turtle):
     def __init__(self):
         turtle.Turtle.__init__(self)
         self.shape('images/wizard_right.gif')
-        #self.color('blue')
+        # self.color('blue')
+        self.hideturtle()
         self.penup()
         self.speed(0)
-        self.gold = 0 # When the game starts, the player has 0 gold
+        self.gold = 0  # When the game starts, the player has 0 gold
     '''
     def move(self, where):
         if where == 'up':
@@ -54,11 +59,12 @@ class Player(turtle.Turtle):
         if (move_to_x, move_to_y) not in walls:
             self.goto(move_to_x, move_to_y)
     '''
+
     def up(self):
         move_to_x = self.xcor()
         move_to_y = self.ycor() + 24
-        if (move_to_x,move_to_y) not in walls:
-            self.goto(move_to_x,move_to_y)
+        if (move_to_x, move_to_y) not in walls:
+            self.goto(move_to_x, move_to_y)
 
     def down(self):
         move_to_x = self.xcor()
@@ -70,8 +76,8 @@ class Player(turtle.Turtle):
         move_to_x = self.xcor() - 24
         move_to_y = self.ycor()
         self.shape('images/wizard_left.gif')
-        if (move_to_x,move_to_y) not in walls:
-            self.goto(move_to_x,move_to_y)
+        if (move_to_x, move_to_y) not in walls:
+            self.goto(move_to_x, move_to_y)
 
     def right(self):
         move_to_x = self.xcor() + 24
@@ -79,7 +85,7 @@ class Player(turtle.Turtle):
         self.shape('images/wizard_right.gif')
         if (move_to_x, move_to_y) not in walls:
             self.goto(move_to_x, move_to_y)
-    
+
     def is_collision(self, other):
         a = self.xcor() - other.xcor()
         b = self.ycor() - other.ycor()
@@ -90,28 +96,30 @@ class Player(turtle.Turtle):
         else:
             return False
 
+
 class Treasure(turtle.Turtle):
-    def __init__(self,x,y):
+    def __init__(self, x, y):
         turtle.Turtle.__init__(self)
         self.shape('images/treasure.gif')
-        #self.color('yellow')
+        # self.color('yellow')
         self.penup()
         self.speed(0)
         self.gold = 100
-        self.goto(x,y)
+        self.goto(x, y)
 
     def destroy(self):
         self.hideturtle()
 
+
 class Enemy(turtle.Turtle):
-    def __init__(self,x,y):
+    def __init__(self, x, y):
         turtle.Turtle.__init__(self)
         self.shape('images/enemy.gif')
         self.penup()
         self.speed(0)
         self.gold = 25
-        self.goto(x,y)
-        self.direction = rnd.choice(['up','down','left','right'])
+        self.goto(x, y)
+        self.direction = rnd.choice(['up', 'down', 'left', 'right'])
 
     def move(self):
         if self.direction == 'up':
@@ -130,8 +138,8 @@ class Enemy(turtle.Turtle):
             dx = 0
             dy = 0
 
-        #Check if player is close
-        #If so, go in that direction
+        # Check if player is close
+        # If so, go in that direction
         if self.is_close(player):
             if player.xcor() < self.xcor():
                 self.direction = 'left'
@@ -142,19 +150,19 @@ class Enemy(turtle.Turtle):
             elif player.ycor() > self.ycor():
                 self.direction = 'up'
 
-        #Calculate te spot to move to
+        # Calculate te spot to move to
         move_to_x = self.xcor() + dx
         move_to_y = self.ycor() + dy
 
-        #Check if the space has a wall
+        # Check if the space has a wall
         if (move_to_x, move_to_y) not in walls:
-            self.goto(move_to_x,move_to_y)
+            self.goto(move_to_x, move_to_y)
         else:
-            #Choose a different direction
-            self.direction = rnd.choice(['up','down','left','right'])
+            # Choose a different direction
+            self.direction = rnd.choice(['up', 'down', 'left', 'right'])
 
-        #Set timer to move next time
-        turtle.ontimer(self.move, t=rnd.randint(100,300))
+        # Set timer to move next time
+        turtle.ontimer(self.move, t=rnd.randint(100, 300))
 
     def is_close(self, other):
         a = self.xcor() - other.xcor()
@@ -166,31 +174,36 @@ class Enemy(turtle.Turtle):
         else:
             return False
 
-wn = turtle.Screen() #Create a screen
+
+wn = turtle.Screen()  # Create a screen
+
+
 def create_screen():
     wn.bgcolor('black')
     wn.title('Maze Game')
-    wn.setup(700,700) #(pixels)
+    wn.setup(700, 700)  # (pixels)
     print('create_screen')
     wn.tracer(0)
 
-#Create levels list
-levels= ['']
 
-#Add a treasure list
+# Create levels list
+levels = ['']
+
+# Add a treasure list
 treasures = []
 
-#Add enemies list
+# Add enemies list
 enemies = []
 
-#Create class instances
+# Create class instances
 pen = Pen()
 player = Player()
 gold_pen = turtle.Turtle()
-#Create wall coordinates list
+# Create wall coordinates list
 walls = []
 
-def initialise():        
+
+def initialise():
     global levels
     global treasures
     global enemies
@@ -198,8 +211,8 @@ def initialise():
     global player
     global gold_pen
     global walls
-    
-    #Define first level
+
+    # Define first level
     level_1 = [
         'XXXXXXXXXXXXXXXXXXXXXXXXX',
         'XP XXXXXXX         EXXXXX',
@@ -226,94 +239,102 @@ def initialise():
         'XX                  XXXXX',
         'XX                     XX',
         'XXXXXXXXXXXXXXXXXXXXXXXXX'
-    ] # This permits us to create a level just by changing some text
+    ]  # This permits us to create a level just by changing some text
 
-    #Add maze to mazes list
+    # Add maze to mazes list
     levels.append(level_1)
 
-    #Create Level Setup Function
+    # Create Level Setup Function
     def setup_maze(level):
         for y in range(len(level)):
-            for x in range (len(level[y])):
-                #Get the character at each x,y coordinate
-                #note the order of y and x in the next line
+            for x in range(len(level[y])):
+                # Get the character at each x,y coordinate
+                # note the order of y and x in the next line
                 c = level[y][x]
-                #Calculate the screen x,y
+                # Calculate the screen x,y
                 screen_x = -288 + (x * 24)
                 screen_y = 288 - (y * 24)
 
-                #Check if it is an X (representing a wall)
+                # Check if it is an X (representing a wall)
                 if c == 'X':
-                    pen.goto(screen_x,screen_y)
+                    pen.penup()
+                    pen.hideturtle()
+                    pen.goto(screen_x, screen_y)
                     pen.shape('images/wall.gif')
                     pen.stamp()
-                    #Add coordinates to wall list
-                    walls.append((screen_x,screen_y))
+                    # Add coordinates to wall list
+                    walls.append((screen_x, screen_y))
 
-                #Check if it is a P (representing the player)
+                # Check if it is a P (representing the player)
                 if c == 'P':
-                    player.goto(screen_x,screen_y)
+                    player.penup()
+                    player.goto(screen_x, screen_y)
 
-                #Check if it is a R (representing a treasure)
+                # Check if it is a R (representing a treasure)
                 if c == 'T':
-                    treasures.append(Treasure(screen_x,screen_y))
+                    treasures.append(Treasure(screen_x, screen_y))
 
                 if c == 'E':
-                    enemies.append(Enemy(screen_x,screen_y))
+                    enemies.append(Enemy(screen_x, screen_y))
 
-    #Draw the gold on screen
-    
+    # Draw the gold on screen
+
     gold_pen.speed(0)
     gold_pen.color('gold')
     gold_pen.penup()
-    gold_pen.setposition(-288,298)
-    gold_pen.write('Gold: %d' % player.gold, False, align='left',font=('Arial',14,'normal'))
-#    gold_pen.hideturtle()
+    gold_pen.setposition(-288, 298)
+    gold_pen.write('Gold: %d' % player.gold, False,
+                   align='left', font=('Arial', 14, 'normal'))
+    gold_pen.hideturtle()
 
-    #Set up the level
+    # Set up the level
     setup_maze(levels[1])
-    #print(walls)
+    # print(walls)
 
-    #Keyboard Binding
+    # Keyboard Binding
     turtle.listen()
-    turtle.onkey(player.left,'Left')
-    turtle.onkey(player.right,'Right')
-    turtle.onkey(player.up,'Up')
-    turtle.onkey(player.down,'Down')
+    turtle.onkey(player.left, 'Left')
+    turtle.onkey(player.right, 'Right')
+    turtle.onkey(player.up, 'Up')
+    turtle.onkey(player.down, 'Down')
 
-    #Start moving enemies
+    # Start moving enemies
     for enemy in enemies:
         turtle.ontimer(enemy.move, t=250)
     print('init')
-#wn.tracer(0)
+# wn.tracer(0)
 
-#Main Game Loop
+# Main Game Loop
+
+
 def main_loop():
     global player
     global treasures
     global enemies
     global gold_pen
-    
+
     while True:
-        #Check for player collision with treasure
-        #Iterate through treasure list
+        # Check for player collision with treasure
+        # Iterate through treasure list
         for treasure in treasures:
             if player.is_collision(treasure):
-                #Add the trasure gold to the player gold
+                # Add the trasure gold to the player gold
                 player.gold += treasure.gold
                 gold_pen.clear()
-                gold_pen.write('Gold: %d' % player.gold,False,align='left', font=('Arial',14,'normal'))
-                #Destroy the treasure
+                gold_pen.write('Gold: %d' % player.gold, False,
+                               align='left', font=('Arial', 14, 'normal'))
+                # Destroy the treasure
                 treasure.destroy()
-                #Remove the treasure form the list
+                # Remove the treasure form the list
                 treasures.remove(treasure)
 
-        #Iterate through enemy list to see if the player collides
+        # Iterate through enemy list to see if the player collides
         for enemy in enemies:
             if player.is_collision(enemy):
                 enemy_pen = turtle.Turtle()
                 enemy_pen.color('red')
-                enemy_pen.write('Game Over!',False,align='center', font=('Arial',40,'normal'))
+                enemy_pen.write('Game Over!', False,
+                                align='center', font=('Arial', 40, 'normal'))
 
-        #Update screen
+        # Update screen
         wn.update()
