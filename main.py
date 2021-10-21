@@ -60,6 +60,8 @@ b = Button(-200, 200, length=300, height=100, title='Maze Game')
 turtle.listen()
 turtle.onscreenclick(b.btn_click, 1)
 
+turtle.onkeypress(wn.bye, 'Escape')
+
 while True:
     if b.click == True:
         b.click = False
