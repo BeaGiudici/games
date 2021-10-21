@@ -20,8 +20,6 @@ for image in images:
 class Pen(turtle.Turtle):  # defines a turtle object
     def __init__(self):
         turtle.Turtle.__init__(self)
-#        self.shape('square')
-#        self.color('white')
         self.penup()
         self.hideturtle()
         self.speed(0)  # fasest
@@ -31,34 +29,12 @@ class Player(turtle.Turtle):
     def __init__(self):
         turtle.Turtle.__init__(self)
         self.shape('images/wizard_right.gif')
-        # self.color('blue')
-        # self.hideturtle()
         self.penup()
         self.speed(0)
         self.gold = 0  # When the game starts, the player has 0 gold
-    '''
-    def move(self, where):
-        if where == 'up':
-            move_to_x = self.xcor()
-            move_to_y = self.ycor() + 24
 
-        elif where == 'down':
-            move_to_x = self.xcor()
-            move_to_y = self.ycor() - 24
-
-        elif where == 'left':
-            move_to_x = self.xcor() - 24
-            move_to_y = self.ycor()
-            self.shape('images/wizard_left.gif')
-
-        elif where == 'right':
-            move_to_x = self.xcor()
-            move_to_y = self.ycor() + 24
-            self.shape('images/wizard_right.gif')
-
-        if (move_to_x, move_to_y) not in walls:
-            self.goto(move_to_x, move_to_y)
-    '''
+    # It would be nice to write the movement functions
+    # in just one big function
 
     def up(self):
         move_to_x = self.xcor()
@@ -181,7 +157,6 @@ def create_screen():
     wn.bgcolor('black')
     wn.title('Maze Game')
     wn.setup(700, 700)  # (pixels)
-    print('create_screen')
     wn.tracer(0)
 
 
@@ -193,6 +168,23 @@ def initialise():
     global player
     global gold_pen
     global walls
+
+    # Create levels list
+    levels = ['']
+
+    # Add a treasure list
+    treasures = []
+
+    # Add enemies list
+    enemies = []
+
+    # Create class instances
+    pen = Pen()
+    player = Player()
+    gold_pen = turtle.Turtle()
+
+    # Create wall coordinates list
+    walls = []
 
     # Define first level
     level_1 = [
@@ -260,7 +252,6 @@ def initialise():
                     enemies.append(Enemy(screen_x, screen_y))
 
     # Draw the gold on screen
-
     gold_pen.speed(0)
     gold_pen.color('gold')
     gold_pen.penup()
@@ -271,7 +262,6 @@ def initialise():
 
     # Set up the level
     setup_maze(levels[1])
-    # print(walls)
 
     # Keyboard Binding
     turtle.listen()
@@ -283,12 +273,9 @@ def initialise():
     # Start moving enemies
     for enemy in enemies:
         turtle.ontimer(enemy.move, t=250)
-    print('init')
-# wn.tracer(0)
+
 
 # Main Game Loop
-
-
 def main_loop():
     global player
     global treasures
@@ -322,37 +309,7 @@ def main_loop():
         wn.update()
 
 
-def create_variables():
-    '''
-Define the variables of the code
-    '''
-    global wn  # Create a screen
-    # Create levels list
-    global levels
-    levels = ['']
-
-# Add a treasure list
-    global treasures
-    treasures = []
-
-# Add enemies list
-    global enemies
-    enemies = []
-
-# Create class instances
-    global pen
-    pen = Pen()
-    global player
-    player = Player()
-    global gold_pen
-    gold_pen = turtle.Turtle()
-    # Create wall coordinates list
-    global walls
-    walls = []
-
-
 if __name__ == '__main__':
-    create_variables()
     # Set the environment for Maze Game
     create_screen()
     initialise()

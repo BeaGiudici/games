@@ -55,7 +55,7 @@ Function that determines the click on the button
             self.click = True
 
 
-b = Button(-200, 200, length=300, height=100, title='Game 1')
+b = Button(-200, 200, length=300, height=100, title='Maze Game')
 
 turtle.listen()
 turtle.onscreenclick(b.btn_click, 1)
@@ -65,9 +65,7 @@ while True:
         b.click = False
         wn.clearscreen()
         wn.bgpic('nopic')
-        wn.bgcolor('black')
         # Set the environment for Maze Game
-        MazeGame.create_variables()
         MazeGame.create_screen()
         MazeGame.initialise()
         # Start the game
