@@ -32,7 +32,7 @@ class Player(turtle.Turtle):
         turtle.Turtle.__init__(self)
         self.shape('images/wizard_right.gif')
         # self.color('blue')
-        self.hideturtle()
+        # self.hideturtle()
         self.penup()
         self.speed(0)
         self.gold = 0  # When the game starts, the player has 0 gold
@@ -175,32 +175,14 @@ class Enemy(turtle.Turtle):
             return False
 
 
-wn = turtle.Screen()  # Create a screen
-
-
 def create_screen():
+    global wn
+    wn = turtle.Screen()
     wn.bgcolor('black')
     wn.title('Maze Game')
     wn.setup(700, 700)  # (pixels)
     print('create_screen')
     wn.tracer(0)
-
-
-# Create levels list
-levels = ['']
-
-# Add a treasure list
-treasures = []
-
-# Add enemies list
-enemies = []
-
-# Create class instances
-pen = Pen()
-player = Player()
-gold_pen = turtle.Turtle()
-# Create wall coordinates list
-walls = []
 
 
 def initialise():
@@ -338,3 +320,41 @@ def main_loop():
 
         # Update screen
         wn.update()
+
+
+def create_variables():
+    '''
+Define the variables of the code
+    '''
+    global wn  # Create a screen
+    # Create levels list
+    global levels
+    levels = ['']
+
+# Add a treasure list
+    global treasures
+    treasures = []
+
+# Add enemies list
+    global enemies
+    enemies = []
+
+# Create class instances
+    global pen
+    pen = Pen()
+    global player
+    player = Player()
+    global gold_pen
+    gold_pen = turtle.Turtle()
+    # Create wall coordinates list
+    global walls
+    walls = []
+
+
+if __name__ == '__main__':
+    create_variables()
+    # Set the environment for Maze Game
+    create_screen()
+    initialise()
+    # Start the game
+    main_loop()

@@ -67,6 +67,7 @@ while True:
         wn.bgpic('nopic')
         wn.bgcolor('black')
         # Set the environment for Maze Game
+        MazeGame.create_variables()
         MazeGame.create_screen()
         MazeGame.initialise()
         # Start the game
