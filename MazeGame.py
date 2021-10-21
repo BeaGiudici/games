@@ -275,6 +275,7 @@ Initialize the maze, with walls, players, enemies, and treasures
     turtle.onkey(player.right, 'Right')
     turtle.onkey(player.up, 'Up')
     turtle.onkey(player.down, 'Down')
+    turtle.onkeypress(wn.bye, 'Escape')
 
     # Start moving enemies
     for enemy in enemies:
