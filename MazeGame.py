@@ -152,6 +152,9 @@ class Enemy(turtle.Turtle):
 
 
 def create_screen():
+    '''
+Set up the screen
+    '''
     global wn
     wn = turtle.Screen()
     wn.bgcolor('black')
@@ -161,6 +164,9 @@ def create_screen():
 
 
 def initialise():
+    '''
+Initialize the maze, with walls, players, enemies, and treasures
+    '''
     global levels
     global treasures
     global enemies
@@ -277,6 +283,9 @@ def initialise():
 
 # Main Game Loop
 def main_loop():
+    '''
+Main loop function
+    '''
     global player
     global treasures
     global enemies
