@@ -287,10 +287,6 @@ def main_loop():
     '''
 Main loop function
     '''
-    global player
-    global treasures
-    global enemies
-    global gold_pen
 
     while True:
         # Check for player collision with treasure

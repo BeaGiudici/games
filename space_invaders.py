@@ -16,23 +16,6 @@ if platform.system() == 'Windows':
         print('ERROR: winsound module not available.')
 
 
-def play_sound(soundfile, time=0):
-    # Windows
-    if platform.system() == 'Windows':
-        winsound.PlaySound(soundfile, winsound.SND_ASYNC)
-    # Linux
-    elif platform.system() == 'Linux':
-        os.system('aplay -q {}&'.format(soundfile))
-    # Mac
-    else:
-        os.system('afplay {}&'.format(soundfile))
-
-# Repeat sound
-    if time > 0:
-        turtle.ontimer(lambda: play_sound(
-            soundfile, time), t=int(time*1000))
-
-
 # Register the shape
 turtle.register_shape('images/space-invader-enemy.gif')
 turtle.register_shape('images/space-ship.gif')
@@ -71,10 +54,10 @@ class Player(turtle.Turtle):
     def fire_bullet(self, blt):
         if blt.bulletstate == 'ready':
             # move the bullet to the just above the player
-            play_sound('sounds/laser.wav')
+            play_sound('sounds/laser.wav', time=0)
             blt.bulletstate = 'fire'
-            x = player.xcor()
-            y = player.ycor()
+            x = self.xcor()
+            y = self.ycor()
             blt.setposition(x, y+10)
             blt.showturtle()
 
@@ -114,6 +97,23 @@ class Bullet(turtle.Turtle):
         self.bulletstate = 'ready'
 
 
+def play_sound(soundfile, time=0):
+    # Windows
+    if platform.system() == 'Windows':
+        winsound.PlaySound(soundfile, winsound.SND_ASYNC)
+    # Linux
+    elif platform.system() == 'Linux':
+        os.system('aplay -q {}&'.format(soundfile))
+    # Mac
+    else:
+        os.system('afplay {}&'.format(soundfile))
+
+# Repeat sound
+    if time > 0:
+        turtle.ontimer(lambda: play_sound(
+            soundfile, time), t=int(time*1000))
+
+
 def create_sreen():
     '''
 Set up the screen
@@ -146,8 +146,6 @@ def initialize():
 
     player = Player()
 
-    # create the player's bullet
-    bullet = Bullet()
 
 # Choose a number of enemies
     Nenemies = 30
@@ -178,11 +176,14 @@ def initialize():
     big_enemy.hideturtle()
     big_enemy.speed = 1.25
 
+    # create the player's bullet
+    bullet = Bullet()
+
     # Create keyboard bindings
     wn.listen()
     # When left arrow key is pressed, it
-    wn.onkeypress(player.move_left, 'Left')
     # calls the function 'move_left'
+    wn.onkeypress(player.move_left, 'Left')
     wn.onkeypress(player.move_right, 'Right')  # Same but for right arrow
     wn.onkeypress(player.fire_bullet(bullet), 'space')
     wn.onkeypress(wn.bye, 'Escape')
@@ -194,9 +195,6 @@ def initialize():
 
 
 def main_loop():
-    global player
-    global enemies
-    global bullet
 
     # Set the score to 0
     score = 0
@@ -213,7 +211,6 @@ def main_loop():
     score_pen.hideturtle()
 
     while True:
-        wn.update()
         rand = 2
         player.move_player()
         for enemy in enemies:
@@ -261,31 +258,6 @@ def main_loop():
                 print('Game Over!')
                 break
 
-        '''
-		# Big enemy shows up
-		if rand == 5:
-			big_enemy.showturtle()
-			X = big_enemy.xcor()
-			X += big_enemy.speed
-			big_enemy.setx(X)
-			if big_enemy.xcor() > 275:
-				big_enemy.hideturtle()
-				big_enemy.setx(-275)
-			if isCollision(bullet, big_enemy):
-				play_sound('~Codici/retroGames/sounds/explosion.wav')
-				big_enemy.hideturtle()
-				big_enemy.setx(-275)
-				# Reset the bullet
-				bullet.hideturtle()
-				bulletstate = 'ready'
-				bullet.setposition(0, -400)
-				# Update the score
-				score += 50
-				scorestring = 'Score: {}'.format(score)
-				score_pen.clear()
-				score_pen.write(scorestring, False, align='left',
-												font=('Arial', 14, 'normal'))
-		'''
         # move the bullet
         if bullet.bulletstate == 'fire':
             y = bullet.ycor()
@@ -298,6 +270,8 @@ def main_loop():
             # the bullet returns at the initial position
             bullet.sety(player.ycor()+10)
             bullet.bulletstate = 'ready'
+
+        wn.update()
 
 
 if __name__ == '__main__':
