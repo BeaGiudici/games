@@ -51,15 +51,15 @@ class Player(turtle.Turtle):
             x = 280
         self.setx(x)  # New position
 
-    def fire_bullet(self, blt):
-        if blt.bulletstate == 'ready':
+    def fire_bullet(self):
+        if bullet.bulletstate == 'ready':
             # move the bullet to the just above the player
             play_sound('sounds/laser.wav', time=0)
-            blt.bulletstate = 'fire'
+            bullet.bulletstate = 'fire'
             x = self.xcor()
             y = self.ycor()
-            blt.setposition(x, y+10)
-            blt.showturtle()
+            bullet.setposition(x, y+10)
+            bullet.showturtle()
 
 
 class Enemy(turtle.Turtle):
@@ -185,7 +185,7 @@ def initialize():
     # calls the function 'move_left'
     wn.onkeypress(player.move_left, 'Left')
     wn.onkeypress(player.move_right, 'Right')  # Same but for right arrow
-    wn.onkeypress(player.fire_bullet(bullet), 'space')
+    wn.onkeypress(player.fire_bullet, 'space')
     wn.onkeypress(wn.bye, 'Escape')
 
 # Play background music
@@ -211,7 +211,6 @@ def main_loop():
     score_pen.hideturtle()
 
     while True:
-        rand = 2
         player.move_player()
         for enemy in enemies:
             # Move the enemy
@@ -239,7 +238,7 @@ def main_loop():
                 play_sound('sounds/explosion.wav')
                 # Reset the bullet
                 bullet.hideturtle()
-                bulletstate = 'ready'
+                bullet.bulletstate = 'ready'
                 bullet.setposition(0, -400)
                 # Reset the enemy
                 enemy.setposition(0, 10000)
