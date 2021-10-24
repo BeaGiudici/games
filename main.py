@@ -64,6 +64,15 @@ turtle.onscreenclick(bMG.btn_click, 1, add=True)
 turtle.onscreenclick(bSI.btn_click, 1, add=True)
 turtle.onkeypress(wn.bye, 'Escape')
 
+initial_msg = turtle.Turtle()
+initial_msg.penup()
+initial_msg_string = 'Welcome in retroGames!\nPress a button to start a game!'
+initial_msg.color('white')
+initial_msg.setposition(0, 170)
+initial_msg.write(initial_msg_string, False, align='center',
+                  font=('Courier', 15, 'bold'))
+initial_msg.hideturtle()
+
 while True:
 
     if bMG.click == True:

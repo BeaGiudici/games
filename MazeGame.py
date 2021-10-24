@@ -310,7 +310,7 @@ Main loop function
                 enemy_pen.color('red')
                 enemy_pen.write('Game Over!', False,
                                 align='center', font=('Arial', 40, 'normal'))
-
+                enemy_pen.hideturtle()
         # Update screen
         wn.update()
 
