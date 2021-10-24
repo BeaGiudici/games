@@ -1,12 +1,13 @@
 import turtle
 import MazeGame
+import space_invaders
 
 turtle.register_shape('images/main_screen.gif')
 
 wn = turtle.Screen()  # Create a screen
 # wn.bgcolor('blue')
 wn.bgpic('images/main_screen.gif')
-wn.title('Initial')
+wn.title('retroGames')
 wn.setup(700, 700)  # (pixels)
 wn.tracer(0)
 
@@ -51,20 +52,22 @@ Function that determines the click on the button
         '''
         if self.xcor() - self.length/2. < x < self.xcor() + self.length/2. \
                 and self.ycor() - self.height/3. < y < self.ycor() + 2.*self.height/3.:
-            #			print('CLICK!', x,y)
+            print('CLICK!', x, y)
             self.click = True
 
 
-b = Button(-200, 200, length=300, height=100, title='Maze Game')
+bMG = Button(-150, 0, length=300, height=100, title='Maze Game')
+bSI = Button(-150, -200, length=300, height=100, title='Space Invaders')
 
 turtle.listen()
-turtle.onscreenclick(b.btn_click, 1)
-
+turtle.onscreenclick(bMG.btn_click, 1, add=True)
+turtle.onscreenclick(bSI.btn_click, 1, add=True)
 turtle.onkeypress(wn.bye, 'Escape')
 
 while True:
-    if b.click == True:
-        b.click = False
+
+    if bMG.click == True:
+        bMG.click = False
         wn.clearscreen()
         wn.bgpic('nopic')
         # Set the environment for Maze Game
@@ -72,4 +75,15 @@ while True:
         MazeGame.initialise()
         # Start the game
         MazeGame.main_loop()
+
+    if bSI.click == True:
+        bSI.click = False
+        wn.clearscreen()
+        wn.bgpic('nopic')
+        # Set the environment for Space Invaders
+        space_invaders.create_sreen()
+        space_invaders.initialize()
+        # Start the game
+        space_invaders.main_loop()
+
     wn.update()
